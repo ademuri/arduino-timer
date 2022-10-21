@@ -34,7 +34,7 @@ class CountUpTimer {
     started_ = false;
   }
 
-  bool IsRunning() {
+  bool Running() {
     return started_;
   }
 
