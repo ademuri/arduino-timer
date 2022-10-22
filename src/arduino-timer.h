@@ -2,7 +2,12 @@
 
 #ifdef ARDUINO
 #include <Arduino.h>
+
+#else
+#include <cstdint>
+
 #endif
+
 
 class CountDownTimer {
  public:
