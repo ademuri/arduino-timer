@@ -19,7 +19,7 @@ void loop() {
 With a `CountDown` timer, you can instead write:
 
 ```c++
-#include "timer.h"
+#include "arduino-timer.h"
 
 CountDownTimer print_timer{5000};
 
