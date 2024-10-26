@@ -28,3 +28,5 @@ jobs:
         pip install --upgrade platformio
     - name: Build
       run: ./build_arduino.sh
+    - name: Test
+      run: pio test
