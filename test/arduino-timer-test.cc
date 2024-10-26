@@ -5,6 +5,7 @@
 // clang-format on
 
 #include <gtest/gtest.h>
+
 #include <limits>
 
 TEST(CountDownTimer, Simple) {
@@ -100,6 +101,62 @@ TEST(CountDownTimer, MillisRollsOver) {
   EXPECT_TRUE(timer.Expired());
   EXPECT_FALSE(timer.Active());
   EXPECT_TRUE(timer.Running());
+}
+
+TEST(CountUpTimer, Simple) {
+  setMillis(0);
+
+  CountUpTimer timer;
+  EXPECT_FALSE(timer.Running());
+  EXPECT_EQ(timer.Get(), 0);
+
+  setMillis(100);
+  EXPECT_FALSE(timer.Running());
+  EXPECT_EQ(timer.Get(), 0);
+
+  timer.Reset();
+  EXPECT_TRUE(timer.Running());
+  EXPECT_EQ(timer.Get(), 0);
+
+  advanceMillis(100);
+  EXPECT_TRUE(timer.Running());
+  EXPECT_EQ(timer.Get(), 100);
+
+  timer.Stop();
+  EXPECT_FALSE(timer.Running());
+  EXPECT_EQ(timer.Get(), 0);
+
+  advanceMillis(100);
+  EXPECT_FALSE(timer.Running());
+  EXPECT_EQ(timer.Get(), 0);
+}
+
+TEST(CountUpTimer, MillisRollsOver) {
+  setMillis(std::numeric_limits<uint32_t>::max() - 50);
+
+  CountUpTimer timer;
+  EXPECT_FALSE(timer.Running());
+  EXPECT_EQ(timer.Get(), 0);
+
+  setMillis(100);
+  EXPECT_FALSE(timer.Running());
+  EXPECT_EQ(timer.Get(), 0);
+
+  timer.Reset();
+  EXPECT_TRUE(timer.Running());
+  EXPECT_EQ(timer.Get(), 0);
+
+  advanceMillis(100);
+  EXPECT_TRUE(timer.Running());
+  EXPECT_EQ(timer.Get(), 100);
+
+  timer.Stop();
+  EXPECT_FALSE(timer.Running());
+  EXPECT_EQ(timer.Get(), 0);
+
+  advanceMillis(100);
+  EXPECT_FALSE(timer.Running());
+  EXPECT_EQ(timer.Get(), 0);
 }
 
 int main(int argc, char **argv) {
