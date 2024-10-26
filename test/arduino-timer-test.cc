@@ -42,7 +42,7 @@ TEST(CountDownTimer, Simple) {
   EXPECT_TRUE(timer.Running());
 }
 
-TEST(CountDownTimer, MillisRollsOver) {
+TEST(CountDownTimer, MillisRollsOverDurationRollsOver) {
   setMillis(std::numeric_limits<uint32_t>::max() - 50);
 
   CountDownTimer timer{100};
@@ -97,6 +97,30 @@ TEST(CountDownTimer, MillisRollsOver) {
   EXPECT_TRUE(timer.Running());
 
   // 1101 ms
+  advanceMillis(1000);
+  EXPECT_TRUE(timer.Expired());
+  EXPECT_FALSE(timer.Active());
+  EXPECT_TRUE(timer.Running());
+}
+
+TEST(CountDownTimer, MillisRollsOverDurationDoesNot) {
+  setMillis(std::numeric_limits<uint32_t>::max() - 1000);
+
+  CountDownTimer timer{100};
+  EXPECT_FALSE(timer.Expired());
+  EXPECT_FALSE(timer.Active());
+  EXPECT_FALSE(timer.Running());
+
+  timer.Reset();
+  EXPECT_FALSE(timer.Expired());
+  EXPECT_TRUE(timer.Active());
+  EXPECT_TRUE(timer.Running());
+
+  advanceMillis(200);
+  EXPECT_TRUE(timer.Expired());
+  EXPECT_FALSE(timer.Active());
+  EXPECT_TRUE(timer.Running());
+
   advanceMillis(1000);
   EXPECT_TRUE(timer.Expired());
   EXPECT_FALSE(timer.Active());

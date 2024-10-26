@@ -17,25 +17,35 @@ class CountDownTimer {
     started_at_ = millis();
     expires_ = started_at_ + duration_;
   }
+
   void Stop() { started_ = false; }
+
   bool Expired() {
+    const uint32_t now = millis();
     if (!started_) {
       return false;
     }
     if (started_at_ > expires_) {
-      return millis() < started_at_ && millis() > expires_;
+      return now < started_at_ && millis() > expires_;
+    } else if (started_at_ > now) {
+      return true;
     }
-    return millis() > expires_;
+    return now > expires_;
   }
+
   bool Active() {
+    const uint32_t now = millis();
     if (!started_) {
       return false;
     }
     if (started_at_ > expires_) {
-      return millis() >= started_at_ || millis() <= expires_;
+      return now >= started_at_ || millis() <= expires_;
+    } else if (started_at_ > now) {
+      return false;
     }
-    return millis() <= expires_;
+    return now <= expires_;
   }
+
   bool Running() { return started_; }
 
  protected:
