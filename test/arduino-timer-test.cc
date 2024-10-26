@@ -5,6 +5,7 @@
 // clang-format on
 
 #include <gtest/gtest.h>
+#include <limits>
 
 TEST(CountDownTimer, Simple) {
   setMillis(0);
@@ -35,6 +36,67 @@ TEST(CountDownTimer, Simple) {
   EXPECT_TRUE(timer.Running());
 
   setMillis(1000);
+  EXPECT_TRUE(timer.Expired());
+  EXPECT_FALSE(timer.Active());
+  EXPECT_TRUE(timer.Running());
+}
+
+TEST(CountDownTimer, MillisRollsOver) {
+  setMillis(std::numeric_limits<uint32_t>::max() - 50);
+
+  CountDownTimer timer{100};
+  EXPECT_FALSE(timer.Expired());
+  EXPECT_FALSE(timer.Active());
+  EXPECT_FALSE(timer.Running());
+
+  timer.Reset();
+  EXPECT_FALSE(timer.Expired());
+  EXPECT_TRUE(timer.Active());
+  EXPECT_TRUE(timer.Running());
+
+  advanceMillis(40);
+  EXPECT_FALSE(timer.Expired());
+  EXPECT_TRUE(timer.Active());
+  EXPECT_TRUE(timer.Running());
+
+  // 49 ms
+  advanceMillis(9);
+  EXPECT_FALSE(timer.Expired());
+  EXPECT_TRUE(timer.Active());
+  EXPECT_TRUE(timer.Running());
+
+  // 50 ms
+  advanceMillis(1);
+  EXPECT_FALSE(timer.Expired());
+  EXPECT_TRUE(timer.Active());
+  EXPECT_TRUE(timer.Running());
+
+  // 51 ms
+  advanceMillis(1);
+  EXPECT_FALSE(timer.Expired());
+  EXPECT_TRUE(timer.Active());
+  EXPECT_TRUE(timer.Running());
+
+  // 99 ms
+  advanceMillis(48);
+  EXPECT_FALSE(timer.Expired());
+  EXPECT_TRUE(timer.Active());
+  EXPECT_TRUE(timer.Running());
+
+  // 100 ms
+  advanceMillis(1);
+  EXPECT_FALSE(timer.Expired());
+  EXPECT_TRUE(timer.Active());
+  EXPECT_TRUE(timer.Running());
+
+  // 101 ms
+  advanceMillis(1);
+  EXPECT_TRUE(timer.Expired());
+  EXPECT_FALSE(timer.Active());
+  EXPECT_TRUE(timer.Running());
+
+  // 1101 ms
+  advanceMillis(1000);
   EXPECT_TRUE(timer.Expired());
   EXPECT_FALSE(timer.Active());
   EXPECT_TRUE(timer.Running());
